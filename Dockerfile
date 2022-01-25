@@ -1,8 +1,8 @@
-ARG ALPINE=latest
+ARG ALPINE_VERSION=latest
 
-FROM alpine:$ALPINE
+FROM alpine:$ALPINE_VERSION
 
-ENV TOR="0.4.6.9"
+ENV TOR_VERSION="0.4.6.9"
 
 LABEL maintainer="wolfgang.keller@wobilix.de"
 
@@ -10,14 +10,14 @@ WORKDIR /
 
 RUN apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev zlib-dev libcap-dev zstd-dev xz-dev && \
     apk add --no-cache bash tzdata musl py3-pip && \
-    wget https://dist.torproject.org/tor-$TOR.tar.gz && \
-    tar xzf tor-$TOR.tar.gz && \
-    cd tor-$TOR && \
+    wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
+    tar xzf tor-$TOR_VERSION.tar.gz && \
+    cd tor-$TOR_VERSION && \
     ./configure && \
     make && \
     make install && \
     cd .. && \
-    rm -rf tor-$TOR* && \
+    rm -rf tor-$TOR_VERSION* && \
     apk del --no-cache .build-deps && \
     apk add --no-cache libevent libgcc libcap zstd-libs && \
     pip install nyx && \
