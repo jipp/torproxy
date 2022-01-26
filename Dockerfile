@@ -21,6 +21,7 @@ RUN wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
     make install && \
     cd .. && \
     rm -rf tor-$TOR_VERSION* && \
+    rm chksum.sha256sum && \
     apk del --no-cache .build-deps && \
     apk add --no-cache libevent libgcc libcap zstd-libs && \
     pip install nyx && \
