@@ -2,7 +2,8 @@ ARG ALPINE_VERSION=latest
 
 FROM alpine:$ALPINE_VERSION
 
-ENV TOR_VERSION="0.4.6.9"
+ARG TOR_VERSION="0.4.6.9"
+ENV TOR_VERSION=$TOR_VERSION
 
 LABEL maintainer="wolfgang.keller@wobilix.de"
 
