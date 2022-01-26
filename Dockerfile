@@ -8,9 +8,12 @@ LABEL maintainer="wolfgang.keller@wobilix.de"
 
 WORKDIR /
 
-RUN apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev zlib-dev libcap-dev zstd-dev xz-dev && \
+RUN wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
+    wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz.sha256sum && \
+    sed "s/$/  tor-$TOR_VERSION.tar.gz/" tor-$TOR_VERSION.tar.gz.sha256sum > chksum.sha256sum && \
+    sha256sum -c chksum.sha256sum && \
+    apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev zlib-dev libcap-dev zstd-dev xz-dev && \
     apk add --no-cache bash tzdata musl py3-pip && \
-    wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
     tar xzf tor-$TOR_VERSION.tar.gz && \
     cd tor-$TOR_VERSION && \
     ./configure && \
