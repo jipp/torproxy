@@ -67,4 +67,4 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: jipp13/torproxy
-        readme-filepath: /README.md
+        readme-filepath: /torproxy/README.md
