@@ -9,7 +9,7 @@ on:
       - README.md
 
 jobs:
-  PushContainerReadme
+  PushContainerReadme:
     runs-on: ubuntu-latest
     steps:
     - name: git checkout
