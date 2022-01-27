@@ -20,7 +20,7 @@ jobs:
 
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASS: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_PASS: ${{ secrets.PASS }}
       with:
         destination_container_repo: jipp13/torproxy
         provider: dockerhub
