@@ -21,6 +21,19 @@
 ### docker-compose
 
 ```bash
+networks:
+  tor:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-tor
+    enable_ipv6: true
+    ipam:
+      config:
+      - subnet: 192.168.5.0/24
+      - subnet: fd00:0:0:5::/64
+      driver: default
+    name: tor
+services:
   tor:
     container_name: tor
     environment:
@@ -45,4 +58,5 @@
     volumes:
     - /docker/tor/etc:/usr/local/etc/tor:rw
     - /docker/tor/lib:/usr/local/var/lib/tor:rw
+version: '3'
 ```

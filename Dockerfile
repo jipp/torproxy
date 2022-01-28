@@ -33,7 +33,7 @@ RUN wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
     chmod 700 /usr/local/var/lib/tor
 
 EXPOSE 8118 9001 9030 9050
-VOLUME ["/usr/local/etc/tor", "/usr/local/var/lib/tor"]
+VOLUME ["/usr/local/etc/tor", "/usr/local/var/lib/tor", "/etc/privoxy/"]
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
