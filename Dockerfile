@@ -14,7 +14,7 @@ RUN wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
     sed "s/$/  tor-$TOR_VERSION.tar.gz/" tor-$TOR_VERSION.tar.gz.sha256sum > chksum.sha256sum && \
     sha256sum -c chksum.sha256sum && \
     apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev zlib-dev libcap-dev zstd-dev xz-dev && \
-    apk add --no-cache bash tzdata musl py3-pip && \
+    apk add --no-cache bash tzdata musl py3-pip privoxy && \
     tar xzf tor-$TOR_VERSION.tar.gz && \
     cd tor-$TOR_VERSION && \
     ./configure && \
@@ -32,7 +32,7 @@ RUN wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
     chown tor:tor /usr/local/var/lib/tor && \
     chmod 700 /usr/local/var/lib/tor
 
-EXPOSE 9001 9030 9050
+EXPOSE 8118 9001 9030 9050
 VOLUME ["/usr/local/etc/tor", "/usr/local/var/lib/tor"]
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
