@@ -50,4 +50,4 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache-${{ matrix.build.tag }}
           build-args: |
             ALPINE_VERSION=${{ matrix.build.alpine_version }}
-            TOR_VERSION=${{ matrix.build.tor_version }}
+            --build-arg TOR_VERSION=${{ matrix.build.tor_version }}
