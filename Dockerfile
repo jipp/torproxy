@@ -27,8 +27,9 @@ RUN apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev
     rm -rf tor-$TOR_VERSION* && \
 
     pip install nyx && \
-    rm -rf /var/cache/apk/* && \
 
+    rm -rf /root/.cache && \
+    rm -rf /var/cache/apk/* && \
     apk del --no-cache .build-deps && \
     apk add --no-cache libevent libgcc libcap zstd-libs
 
@@ -48,6 +49,15 @@ RUN adduser tor -D && \
     chown privoxy:privoxy config default.action default.filter match-all.action regression-tests.action trust user.action user.filter && \
     sed -i '/^listen/s|127\.0\.0\.1||' config && \
     sed -i '/forward *localhost\//a forward-socks5t / 127.0.0.1:9050 .' config
+
+RUN apk add --no-cache --virtual .build-deps git go && \
+    git clone https://gitlab.com/yawning/obfs4.git && \
+    cd obfs4 && \
+    go build -o obfs4proxy/obfs4proxy ./obfs4proxy && \
+    cp ./obfs4proxy/obfs4proxy /usr/local/bin && \
+    cd .. && \
+    apk del --no-cache .build-deps && \
+    rm -rf /root/go /root/.cache /var/cache/apk/* /obfs4
 
 EXPOSE 8118 9001
 VOLUME ["/usr/local/etc/tor", "/usr/local/var/lib/tor"]
