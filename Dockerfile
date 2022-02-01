@@ -11,13 +11,11 @@ WORKDIR /
 
 RUN apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev zlib-dev libcap-dev zstd-dev xz-dev && \
     apk add --no-cache bash tzdata musl py3-pip privoxy curl && \
-
     wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
     wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz.sha256sum && \
     sed "s/$/  tor-$TOR_VERSION.tar.gz/" tor-$TOR_VERSION.tar.gz.sha256sum > chksum.sha256sum && \
     sha256sum -c chksum.sha256sum && \
     rm chksum.sha256sum && \
-
     tar xzf tor-$TOR_VERSION.tar.gz && \
     cd tor-$TOR_VERSION && \
     ./configure && \
@@ -25,15 +23,20 @@ RUN apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev
     make install && \
     cd .. && \
     rm -rf tor-$TOR_VERSION* && \
-
     pip install nyx && \
-
     rm -rf /root/.cache && \
     rm -rf /var/cache/apk/* && \
     apk del --no-cache .build-deps && \
-    apk add --no-cache libevent libgcc libcap zstd-libs
-
-RUN adduser tor -D && \
+    apk add --no-cache libevent libgcc libcap zstd-libs && \
+    apk add --no-cache --virtual .build-deps git go && \
+    git clone https://gitlab.com/yawning/obfs4.git && \
+    cd obfs4 && \
+    go build -o obfs4proxy/obfs4proxy ./obfs4proxy && \
+    cp ./obfs4proxy/obfs4proxy /usr/local/bin && \
+    cd .. && \
+    apk del --no-cache .build-deps && \
+    rm -rf /root/go /root/.cache /var/cache/apk/* /obfs4 && \
+    adduser tor -D && \
     mkdir -p /usr/local/var/lib/tor && \
     chown tor:tor /usr/local/var/lib/tor && \
     chmod 700 /usr/local/var/lib/tor && \
@@ -71,15 +74,6 @@ RUN adduser tor -D && \
     sed -i '/^forward 10\.\*\.\*\.\*\//a forward 192.168.*.*/ .' $file && \
     sed -i '/^forward 192\.168\.\*\.\*\//a forward 127.*.*.*/ .' $file && \
     sed -i '/^forward 127\.\*\.\*\.\*\//a forward localhost/ .' $file
-
-RUN apk add --no-cache --virtual .build-deps git go && \
-    git clone https://gitlab.com/yawning/obfs4.git && \
-    cd obfs4 && \
-    go build -o obfs4proxy/obfs4proxy ./obfs4proxy && \
-    cp ./obfs4proxy/obfs4proxy /usr/local/bin && \
-    cd .. && \
-    apk del --no-cache .build-deps && \
-    rm -rf /root/go /root/.cache /var/cache/apk/* /obfs4
 
 EXPOSE 8118 9001
 VOLUME ["/usr/local/etc/tor", "/usr/local/var/lib/tor"]
