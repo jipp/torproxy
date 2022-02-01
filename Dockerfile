@@ -47,8 +47,30 @@ RUN adduser tor -D && \
     cp user.action.new user.action && \
     cp user.filter.new user.filter && \
     chown privoxy:privoxy config default.action default.filter match-all.action regression-tests.action trust user.action user.filter && \
-    sed -i '/^listen/s|127\.0\.0\.1||' config && \
-    sed -i '/forward *localhost\//a forward-socks5t / 127.0.0.1:9050 .' config
+    file='/etc/privoxy/config' && \
+    sed -i 's|^\(accept-intercepted-requests\) .*|\1 1|' $file && \
+    sed -i '/^listen/s|127\.0\.0\.1||' $file && \
+    sed -i '/forward *localhost\//a forward-socks5t / 127.0.0.1:9050 .' $file && \
+    sed -i '/^forward-socks5t \//a forward 172.16.*.*/ .' $file && \
+    sed -i '/^forward 172\.16\.\*\.\*\//a forward 172.17.*.*/ .' $file && \
+    sed -i '/^forward 172\.17\.\*\.\*\//a forward 172.18.*.*/ .' $file && \
+    sed -i '/^forward 172\.18\.\*\.\*\//a forward 172.19.*.*/ .' $file && \
+    sed -i '/^forward 172\.19\.\*\.\*\//a forward 172.20.*.*/ .' $file && \
+    sed -i '/^forward 172\.20\.\*\.\*\//a forward 172.21.*.*/ .' $file && \
+    sed -i '/^forward 172\.21\.\*\.\*\//a forward 172.22.*.*/ .' $file && \
+    sed -i '/^forward 172\.22\.\*\.\*\//a forward 172.23.*.*/ .' $file && \
+    sed -i '/^forward 172\.23\.\*\.\*\//a forward 172.24.*.*/ .' $file && \
+    sed -i '/^forward 172\.24\.\*\.\*\//a forward 172.25.*.*/ .' $file && \
+    sed -i '/^forward 172\.25\.\*\.\*\//a forward 172.26.*.*/ .' $file && \
+    sed -i '/^forward 172\.26\.\*\.\*\//a forward 172.27.*.*/ .' $file && \
+    sed -i '/^forward 172\.27\.\*\.\*\//a forward 172.28.*.*/ .' $file && \
+    sed -i '/^forward 172\.28\.\*\.\*\//a forward 172.29.*.*/ .' $file && \
+    sed -i '/^forward 172\.29\.\*\.\*\//a forward 172.30.*.*/ .' $file && \
+    sed -i '/^forward 172\.30\.\*\.\*\//a forward 172.31.*.*/ .' $file && \
+    sed -i '/^forward 172\.31\.\*\.\*\//a forward 10.*.*.*/ .' $file && \
+    sed -i '/^forward 10\.\*\.\*\.\*\//a forward 192.168.*.*/ .' $file && \
+    sed -i '/^forward 192\.168\.\*\.\*\//a forward 127.*.*.*/ .' $file && \
+    sed -i '/^forward 127\.\*\.\*\.\*\//a forward localhost/ .' $file
 
 RUN apk add --no-cache --virtual .build-deps git go && \
     git clone https://gitlab.com/yawning/obfs4.git && \
