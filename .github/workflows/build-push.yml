@@ -16,7 +16,7 @@ jobs:
       matrix:
         build:
           - { alpine_version: "edge", tor_version="0.4.6.9", tag: "alpine-edge" }
-          - { alpine_version: "latest", tor_version="0.4.6.9", tag: "alpine-latest" }
+          - { alpine_version: "latest", tor_version="0.4.6.9", tag: "latest" }
           - { alpine_version: "3.15", tor_version="0.4.6.9", tag: "alpine-3.15" }
           - { alpine_version: "3.14", tor_version="0.4.6.9", tag: "alpine-3.14" }
     steps:
