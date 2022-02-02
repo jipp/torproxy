@@ -1,4 +1,4 @@
-# torproxy
+# torproxy with with nyx, obfs4proxy and privoxy
 
 ## build
 
@@ -13,10 +13,6 @@
 ## nyx
 
 - `docker exec -it tor su - tor -c nyx`
-
-## start tor
-
-### cli
 
 ### docker-compose
 
@@ -46,11 +42,8 @@ services:
       tor: null
     ports:
     - protocol: tcp
-      published: 9050
-      target: 9050
-    - protocol: tcp
-      published: 9030
-      target: 9030
+      published: 8118
+      target: 8118
     - protocol: tcp
       published: 9001
       target: 9001
