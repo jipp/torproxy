@@ -9,8 +9,10 @@ LABEL maintainer="wolfgang.keller@wobilix.de"
 
 WORKDIR /
 
-RUN apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev zlib-dev libcap-dev zstd-dev xz-dev && \
+RUN apk update && \
+    apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev zlib-dev libcap-dev zstd-dev xz-dev git go && \
     apk add --no-cache bash tzdata musl py3-pip privoxy curl && \
+    apk add --no-cache libevent libgcc libcap zstd-libs && \
     wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
     wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz.sha256sum && \
     sed "s/$/  tor-$TOR_VERSION.tar.gz/" tor-$TOR_VERSION.tar.gz.sha256sum > chksum.sha256sum && \
@@ -24,19 +26,19 @@ RUN apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev
     cd .. && \
     rm -rf tor-$TOR_VERSION* && \
     pip install nyx && \
-    rm -rf /root/.cache && \
-    rm -rf /var/cache/apk/* && \
-    apk del --no-cache .build-deps && \
-    apk add --no-cache libevent libgcc libcap zstd-libs && \
-    apk add --no-cache --virtual .build-deps git go && \
     git clone https://gitlab.com/yawning/obfs4.git && \
     cd obfs4 && \
     go build -o obfs4proxy/obfs4proxy ./obfs4proxy && \
     cp ./obfs4proxy/obfs4proxy /usr/local/bin && \
     cd .. && \
+    rm -rf obfs4 && \
     apk del --no-cache .build-deps && \
-    rm -rf /root/go /root/.cache /var/cache/apk/* /obfs4 && \
-    adduser tor -D && \
+    apk add --no-cache libevent libgcc libcap zstd-libs && \
+    rm -rf /var/cache/apk/* && \
+    rm -rf /root/.cache && \
+    rm -rf /root/go
+
+RUN adduser tor -D && \
     mkdir -p /usr/local/var/lib/tor && \
     chown tor:tor /usr/local/var/lib/tor && \
     chmod 700 /usr/local/var/lib/tor && \
@@ -82,6 +84,4 @@ RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/entrypoint.sh"]
 
-HEALTHCHECK --interval=60s --timeout=15s --start-period=20s \
-            CMD curl -sx localhost:8118 'https://check.torproject.org/' | grep -qm1 Congratulations
-
+HEALTHCHECK --interval=60s --timeout=15s --start-period=20s CMD curl -sx localhost:8118 'https://check.torproject.org/' | grep -qm1 Congratulations
