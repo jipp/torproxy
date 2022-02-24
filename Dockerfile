@@ -2,9 +2,6 @@ ARG ALPINE_VERSION=latest
 
 FROM alpine:$ALPINE_VERSION
 
-ARG TOR_VERSION="0.4.6.9"
-ENV TOR_VERSION=$TOR_VERSION
-
 LABEL maintainer="wolfgang.keller@wobilix.de"
 
 WORKDIR /
@@ -13,11 +10,13 @@ RUN apk update && \
     apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev zlib-dev libcap-dev zstd-dev xz-dev git go && \
     apk add --no-cache bash tzdata musl py3-pip privoxy curl && \
     apk add --no-cache libevent libgcc libcap zstd-libs && \
+    TOR_VERSION=`curl -s https://dist.torproject.org/  | grep -o 'href=".*">' | grep "tor-" | grep -v alpha | sed 's/href="//;s/">//;s/tor-//;s/.tar.*//' | sort -V | tail -1` && \
     wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
     wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz.sha256sum && \
-    sed "s/$/  tor-$TOR_VERSION.tar.gz/" tor-$TOR_VERSION.tar.gz.sha256sum > chksum.sha256sum && \
+    sed "s/\s.*$//"  tor-$TOR_VERSION.tar.gz.sha256sum > chksum.sha256sum.tmp && \
+    sed "s/$/  tor-$TOR_VERSION.tar.gz/" chksum.sha256sum.tmp > chksum.sha256sum && \
     sha256sum -c chksum.sha256sum && \
-    rm chksum.sha256sum && \
+    rm chksum.sha256sum* && \
     tar xzf tor-$TOR_VERSION.tar.gz && \
     cd tor-$TOR_VERSION && \
     ./configure && \

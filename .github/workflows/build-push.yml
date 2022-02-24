@@ -15,10 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         build:
-          - { alpine_version: "edge", tor_version="0.4.6.10", tag: "alpine-edge" }
-          - { alpine_version: "latest", tor_version="0.4.6.10", tag: "latest" }
-          - { alpine_version: "3.15", tor_version="0.4.6.10", tag: "alpine-3.15" }
-          - { alpine_version: "3.14", tor_version="0.4.6.10", tag: "alpine-3.14" }
+          - { alpine_version: "edge", tag: "alpine-edge" }
+          - { alpine_version: "latest", tag: "latest" }
+          - { alpine_version: "3.15", tag: "alpine-3.15" }
+          - { alpine_version: "3.14", tag: "alpine-3.14" }
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -49,4 +49,3 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache-${{ matrix.build.tag }}
           build-args: |
             ALPINE_VERSION=${{ matrix.build.alpine_version }}
-            TOR_VERSION=${{ matrix.build.tor_version }}
