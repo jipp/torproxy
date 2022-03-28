@@ -33,7 +33,6 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ matrix.build.tag }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-${{ matrix.build.tag }}-
-            ${{ runner.os }}-buildx-
       - name: login dockerhub
         uses: docker/login-action@v1
         with:
@@ -46,6 +45,10 @@ jobs:
           push: true
           tags: jipp13/torproxy:${{ matrix.build.tag }}
           cache-from: type=local,src=/tmp/.buildx-cache-${{ matrix.build.tag }}
-          cache-to: type=local,dest=/tmp/.buildx-cache-${{ matrix.build.tag }}
+          cache-to: type=local,dest=/tmp/.buildx-cache-new-${{ matrix.build.tag }}
           build-args: |
             ALPINE_VERSION=${{ matrix.build.alpine_version }}
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache-${{ matrix.build.tag }}
+          mv /tmp/.buildx-cache-new-${{ matrix.build.tag }} /tmp/.buildx-cache-${{ matrix.build.tag }}
