@@ -53,6 +53,6 @@ jobs:
           push: true
           tags: jipp13/torproxy:${{ matrix.build.tag }}
           cache-from: type=local,src=/tmp/.buildx-cache-${{ matrix.build.tag }}
-          cache-to: type=local,dest=/tmp/.buildx-cache-new-${{ matrix.build.tag }}
+          cache-to: type=local,dest=/tmp/.buildx-cache-${{ matrix.build.tag }}
           build-args: |
             ALPINE_VERSION=${{ matrix.build.alpine_version }}
