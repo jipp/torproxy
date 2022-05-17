@@ -32,6 +32,10 @@ networks:
 services:
   tor:
     container_name: tor
+    deploy:
+      resources:
+        limits:
+          cpus: 1
     environment:
       TZ: Europe/Berlin
     hostname: tor
