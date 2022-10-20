@@ -1,4 +1,4 @@
-name: Build and push Docker Image
+name: Build and push Docker Images
 
 on:
   push:
@@ -16,12 +16,13 @@ jobs:
       matrix:
         build:
           - { alpine_version: "latest", tag: "latest" }
-          - { alpine_version: "3.15", tag: "alpine-3.15" }
-          - { alpine_version: "3.14", tag: "alpine-3.14" }
-          - { alpine_version: "3.13", tag: "alpine-3.13" }
+          - { alpine_version: "3.16",   tag: "alpine-3.16" }
+          - { alpine_version: "3.15",   tag: "alpine-3.15" }
+          - { alpine_version: "3.14",   tag: "alpine-3.14" }
+          - { alpine_version: "3.13",   tag: "alpine-3.13" }
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.5
       - name: setup qemu
         uses: docker/setup-qemu-action@v1
       - name: setup buildx
@@ -33,6 +34,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ matrix.build.tag }}-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-${{ matrix.build.tag }}-
+            ${{ runner.os }}-buildx-
       - name: login dockerhub
         uses: docker/login-action@v1
         with:
@@ -41,14 +43,11 @@ jobs:
       - name: build and push
         uses: docker/build-push-action@v2
         with:
+          context: .
           platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
           push: true
           tags: jipp13/torproxy:${{ matrix.build.tag }}
           cache-from: type=local,src=/tmp/.buildx-cache-${{ matrix.build.tag }}
-          cache-to: type=local,dest=/tmp/.buildx-cache-new-${{ matrix.build.tag }}
+          cache-to: type=local,dest=/tmp/.buildx-cache-${{ matrix.build.tag }}
           build-args: |
             ALPINE_VERSION=${{ matrix.build.alpine_version }}
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache-${{ matrix.build.tag }}
-          mv /tmp/.buildx-cache-new-${{ matrix.build.tag }} /tmp/.buildx-cache-${{ matrix.build.tag }}
