@@ -10,7 +10,7 @@ RUN apk update && \
     apk add --no-cache --virtual .build-deps build-base libevent-dev openssl-dev zlib-dev libcap-dev zstd-dev xz-dev git go && \
     apk add --no-cache bash tzdata musl py3-pip privoxy curl && \
     apk add --no-cache libevent libgcc libcap zstd-libs && \
-    TOR_VERSION=`curl -s https://dist.torproject.org/  | grep -o 'href=".*">' | grep "tor-" | grep -v alpha | sed 's/href="//;s/">//;s/tor-//;s/.tar.*//' | sort -V | tail -1` && \
+    TOR_VERSION=`curl -s https://dist.torproject.org/  | grep -o 'tor-.*">' | grep -v alpha | sed 's/">//;s/tor-//;s/.tar.*//' | sort -Vu | tail -1` && \
     wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz && \
     wget https://dist.torproject.org/tor-$TOR_VERSION.tar.gz.sha256sum && \
     sed "s/\s.*$//"  tor-$TOR_VERSION.tar.gz.sha256sum > chksum.sha256sum.tmp && \
