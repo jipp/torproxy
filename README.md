@@ -1,5 +1,7 @@
 # torproxy with with nyx, obfs4proxy and privoxy
 
+[![Build and push Docker Images](https://github.com/jipp/torproxy/actions/workflows/build-push.yml/badge.svg)](https://github.com/jipp/torproxy/actions/workflows/build-push.yml)
+
 ## build
 
 - `docker build -t jipp13/torproxy .`
